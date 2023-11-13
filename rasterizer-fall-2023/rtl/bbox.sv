@@ -185,6 +185,72 @@ module bbox
     //  DECLARE ANY OTHER SIGNALS YOU NEED
 
     // Try declaring an always_comb block to assign values to box_R10S
+    always_comb begin
+        //set x
+        if (tri_R10S[0][0]<=tri_R10S[1][0]&&tri_R10S[0][0]<=tri_R10S[2][0]) begin
+            box_R10S[0][0]=tri_R10S[0][0];
+            bbox_sel_R10H[0][0]=3'b001;
+            if (tri_R10S[1][0]>=tri_R10S[2][0]) begin
+                box_R10S[1][0]=tri_R10S[1][0];
+                bbox_sel_R10H[1][0]=3'b010;
+            end else begin
+                box_R10S[1][0]=tri_R10S[2][0];
+                bbox_sel_R10H[1][0]=3'b100;
+            end
+        end else if (tri_R10S[1][0]<=tri_R10S[0][0]&&tri_R10S[1][0]<=tri_R10S[2][0]) begin
+            box_R10S[0][0]=tri_R10S[1][0];
+            bbox_sel_R10H[0][0]=3'b010;
+            if (tri_R10S[0][0]>=tri_R10S[2][0]) begin
+                box_R10S[1][0]=tri_R10S[0][0];
+                bbox_sel_R10H[1][0]=3'b001;
+            end else begin
+                box_R10S[1][0]=tri_R10S[2][0];
+                bbox_sel_R10H[1][0]=3'b100;
+            end
+        end else begin
+            box_R10S[0][0]=tri_R10S[2][0];
+            bbox_sel_R10H[0][0]=3'b100;
+            if (tri_R10S[0][0]>=tri_R10S[1][0]) begin
+                box_R10S[1][0]=tri_R10S[0][0];
+                bbox_sel_R10H[1][0]=3'b001;
+            end else begin
+                box_R10S[1][0]=tri_R10S[1][0];
+                bbox_sel_R10H[1][0]=3'b010;
+            end
+        end
+        //set y
+        if (tri_R10S[0][1]<=tri_R10S[1][1]&&tri_R10S[0][1]<=tri_R10S[2][1]) begin
+            box_R10S[0][1]=tri_R10S[0][1];
+            bbox_sel_R10H[0][1]=3'b001;
+            if (tri_R10S[1][1]>=tri_R10S[2][1]) begin
+                box_R10S[1][1]=tri_R10S[1][1];
+                bbox_sel_R10H[1][1]=3'b010;
+            end else begin
+                box_R10S[1][1]=tri_R10S[2][1];
+                bbox_sel_R10H[1][1]=3'b100;
+            end
+        end else if (tri_R10S[1][1]<=tri_R10S[0][1]&&tri_R10S[1][1]<=tri_R10S[2][1]) begin
+            box_R10S[0][1]=tri_R10S[1][1];
+            bbox_sel_R10H[0][1]=3'b010;
+            if (tri_R10S[0][1]>=tri_R10S[2][1]) begin
+                box_R10S[1][1]=tri_R10S[0][1];
+                bbox_sel_R10H[1][1]=3'b001;
+            end else begin
+                box_R10S[1][1]=tri_R10S[2][1];
+                bbox_sel_R10H[1][1]=3'b100;
+            end
+        end else begin
+            box_R10S[0][1]=tri_R10S[2][1];
+            bbox_sel_R10H[0][1]=3'b100;
+            if (tri_R10S[0][1]>=tri_R10S[1][1]) begin
+                box_R10S[1][1]=tri_R10S[0][1];
+                bbox_sel_R10H[1][1]=3'b001;
+            end else begin
+                box_R10S[1][1]=tri_R10S[1][1];
+                bbox_sel_R10H[1][1]=3'b010;
+            end
+        end
+    end//always_comb
     // END CODE HERE
 
     // Assertions to check if box_R10S is assigned properly
@@ -201,6 +267,8 @@ module bbox
     assert property(@(posedge clk) $onehot(bbox_sel_R10H[1][1]));
 
     //Assertions to check UR is never less than LL
+    assert property(@(posedge clk) (box_R10S[1][0]>=box_R10S[0][0])); //UR x >= LL x
+    assert property(@(posedge clk) (box_R10S[1][1]>=box_R10S[0][1])); //UR y >= LL y
     // END CODE HERE
 
 
@@ -237,6 +305,25 @@ for(genvar i = 0; i < 2; i = i + 1) begin
 
             //////// ASSIGN FRACTIONAL PORTION
             // START CODE HERE
+            case (subSample_RnnnnU)
+                4'b1000:rounded_box_R10S[i][j][RADIX-1:0] = 0;
+                4'b0100:begin
+                    rounded_box_R10S[i][j][RADIX-2:0] = 0;
+                    rounded_box_R10S[i][j][RADIX-1:RADIX-1]
+                    = box_R10S[i][j][RADIX-1:RADIX-1];
+                end 
+                4'b0010:begin
+                    rounded_box_R10S[i][j][RADIX-3:0] = 0;
+                    rounded_box_R10S[i][j][RADIX-1:RADIX-2]
+                    = box_R10S[i][j][RADIX-1:RADIX-2];
+                end 
+                4'b0001:begin
+                    rounded_box_R10S[i][j][RADIX-4:0] = 0;
+                    rounded_box_R10S[i][j][RADIX-1:RADIX-3]
+                    = box_R10S[i][j][RADIX-1:RADIX-3];
+                end
+                default: rounded_box_R10S[i][j][RADIX-1:0] = 0;
+            endcase
             // END CODE HERE
 
         end // always_comb
@@ -266,6 +353,39 @@ endgenerate
 
         //////// ASSIGN "out_box_R10S" and "outvalid_R10H"
         // START CODE HERE
+        if (rounded_box_R10S[1][0] > screen_RnnnnS[0]) begin
+            out_box_R10S[1][0] = screen_RnnnnS[0];
+        end else begin
+            out_box_R10S[1][0] = rounded_box_R10S[1][0];
+        end//UR x <= screen x
+
+        if (rounded_box_R10S[1][1] > screen_RnnnnS[1]) begin
+            out_box_R10S[1][1] = screen_RnnnnS[1];
+        end else begin
+            out_box_R10S[1][1] = rounded_box_R10S[1][1];
+        end//UR y <= screen y
+
+        if (rounded_box_R10S[0][0] < 0) begin
+            out_box_R10S[0][0] = 0;
+        end else begin
+            out_box_R10S[0][0] = rounded_box_R10S[0][0];
+        end//LL x >= 0
+
+        if (rounded_box_R10S[0][1] < 0) begin
+            out_box_R10S[0][1] = 0;
+        end else begin
+            out_box_R10S[0][1] = rounded_box_R10S[0][1];
+        end//LL y >= 0
+
+        if (out_box_R10S[1][0] <= screen_RnnnnS[0]
+        && out_box_R10S[1][1] <= screen_RnnnnS[1]
+        && out_box_R10S[0][0] >= 0
+        && out_box_R10S[0][1] >= 0
+        && validTri_R10H==1'b1) begin
+            outvalid_R10H = 1'b1;
+        end else begin 
+            outvalid_R10H = 1'b0;
+        end
         // END CODE HERE
 
     end

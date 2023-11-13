@@ -105,9 +105,53 @@ module sampletest
 
     // START CODE HERE
     // (1) Shift X, Y coordinates such that the fragment resides on the (0,0) position.
+    generate
+    for(genvar i = 0; i < 3; i = i + 1) begin
+        for(genvar j = 0; j < 2; j = j + 1) begin
+
+            always_comb begin
+              tri_shift_R16S[i][j]=tri_R16S[i][j]-sample_R16S[j];
+            end // always_comb
+
+        end
+    end
+    endgenerate
     // (2) Organize edges (form three edges for triangles)
+    always_comb begin
+        //edge 0-1
+        edge_R16S[0][0][0]=tri_shift_R16S[0][0];
+        edge_R16S[0][0][1]=tri_shift_R16S[0][1];
+        edge_R16S[0][1][0]=tri_shift_R16S[1][0];
+        edge_R16S[0][1][1]=tri_shift_R16S[1][1];
+        //edge 1-2
+        edge_R16S[1][0][0]=tri_shift_R16S[1][0];
+        edge_R16S[1][0][1]=tri_shift_R16S[1][1];
+        edge_R16S[1][1][0]=tri_shift_R16S[2][0];
+        edge_R16S[1][1][1]=tri_shift_R16S[2][1];
+        //edge 2-3
+        edge_R16S[2][0][0]=tri_shift_R16S[2][0];
+        edge_R16S[2][0][1]=tri_shift_R16S[2][1];
+        edge_R16S[2][1][0]=tri_shift_R16S[0][0];
+        edge_R16S[2][1][1]=tri_shift_R16S[0][1];
+    end // always_comb
     // (3) Calculate distance x_1 * y_2 - x_2 * y_1
+    always_comb begin
+        dist_lg_R16S[0]=edge_R16S[0][0][0] * edge_R16S[0][1][1]
+                   -edge_R16S[0][1][0] * edge_R16S[0][0][1];
+        dist_lg_R16S[1]=edge_R16S[1][0][0] * edge_R16S[1][1][1]
+                   -edge_R16S[1][1][0] * edge_R16S[1][0][1];
+        dist_lg_R16S[2]=edge_R16S[2][0][0] * edge_R16S[2][1][1]
+                   -edge_R16S[2][1][0] * edge_R16S[2][0][1];
+    end
+
     // (4) Check distance and assign hit_valid_R16H.
+    always_comb begin
+        if (dist_lg_R16S[0]<= 0 && dist_lg_R16S[1]< 0 && dist_lg_R16S[2]<= 0) begin
+            hit_valid_R16H = 1'b1;
+        end else begin
+            hit_valid_R16H = 1'b0;
+        end
+    end
     // END CODE HERE
 
     //Assertions to help debug

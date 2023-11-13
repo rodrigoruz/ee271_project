@@ -252,6 +252,45 @@ if(MOD_FSM == 0) begin // Using baseline FSM
 
     always_comb begin
         // START CODE HERE
+        case (state_R14H)
+            WAIT_STATE:begin
+                next_up_samp_R14S[0]= box_R14S[0][0];
+                next_up_samp_R14S[1]= box_R14S[0][1];
+                next_rt_samp_R14S[0]= box_R14S[0][0];
+                next_rt_samp_R14S[1]= box_R14S[0][1];
+            end
+            TEST_STATE:begin
+                next_up_samp_R14S[0]= box_R14S[0][0];
+                next_up_samp_R14S[1]= sample_R14S[1]+{{(SIGFIG-RADIX-1){1'b0}},subSample_RnnnnU,{(RADIX-3){1'b0}}};
+                next_rt_samp_R14S[0]= sample_R14S[0]+{{(SIGFIG-RADIX-1){1'b0}},subSample_RnnnnU,{(RADIX-3){1'b0}}};
+                next_rt_samp_R14S[1]= sample_R14S[1]; 
+            end
+            default:begin
+                next_up_samp_R14S[0]= box_R14S[0][0];
+                next_up_samp_R14S[1]= box_R14S[0][1];
+                next_rt_samp_R14S[0]= box_R14S[0][0];
+                next_rt_samp_R14S[1]= box_R14S[0][1];
+            end 
+        endcase
+
+        if (sample_R14S[0] == box_R14S[1][0]) begin
+            at_right_edg_R14H= 1'b1;
+        end else begin
+            at_right_edg_R14H= 1'b0;
+        end 
+
+        if (sample_R14S[1] == box_R14S[1][1]) begin
+            at_top_edg_R14H= 1'b1;
+        end else begin
+            at_top_edg_R14H= 1'b0;
+        end
+        
+        if (sample_R14S[0] == box_R14S[1][0]
+         && sample_R14S[1] == box_R14S[1][1]) begin
+            at_end_box_R14H= 1'b1;
+         end else begin
+            at_end_box_R14H= 1'b0;
+         end
         // END CODE HERE
     end
 
@@ -266,6 +305,61 @@ if(MOD_FSM == 0) begin // Using baseline FSM
     always_comb begin
         // START CODE HERE
         // Try using a case statement on state_R14H
+        case (state_R14H)
+            WAIT_STATE:begin
+                next_tri_R14S = tri_R13S;
+                next_color_R14U = color_R13U;
+                next_sample_R14S = box_R13S[0];
+                next_box_R14S = box_R13S;
+                if (validTri_R13H==1'b1) begin
+                    next_state_R14H = TEST_STATE;
+                    next_validSamp_R14H = 1'b1;
+                    next_halt_RnnnnL = 1'b0;
+                end else begin
+                    next_state_R14H = WAIT_STATE;
+                    next_validSamp_R14H = 1'b0;
+                    next_halt_RnnnnL = 1'b1;
+                end
+                
+            end 
+            TEST_STATE:begin
+                next_tri_R14S = tri_R14S;
+                next_color_R14U = color_R14U;
+                next_box_R14S = box_R14S;
+
+                if (at_right_edg_R14H == 1'b0) begin
+                    next_sample_R14S = next_rt_samp_R14S;
+                end else begin
+                    next_sample_R14S = next_up_samp_R14S;
+                end
+
+                if (at_end_box_R14H == 1'b1) begin
+                    next_validSamp_R14H = 1'b0;
+                    next_halt_RnnnnL = 1'b1;
+                    next_state_R14H = WAIT_STATE;
+                end else begin
+                    next_validSamp_R14H = 1'b1;
+                    next_halt_RnnnnL = 1'b0;
+                    next_state_R14H = TEST_STATE;
+                end
+            end
+            default:begin
+                next_tri_R14S = tri_R13S;
+                next_color_R14U = color_R13U;
+                next_sample_R14S = box_R13S[0];
+                next_box_R14S = box_R13S;
+                
+                if (validTri_R13H==1'b1) begin
+                    next_state_R14H = TEST_STATE;
+                    next_validSamp_R14H = 1'b1;
+                    next_halt_RnnnnL = 1'b0;
+                end else begin
+                    next_state_R14H = WAIT_STATE;
+                    next_validSamp_R14H = 1'b0;
+                    next_halt_RnnnnL = 1'b1;
+                end
+            end
+        endcase
         // END CODE HERE
     end // always_comb
 
