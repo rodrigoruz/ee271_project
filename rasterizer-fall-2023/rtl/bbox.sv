@@ -267,8 +267,10 @@ module bbox
     assert property(@(posedge clk) $onehot(bbox_sel_R10H[1][1]));
 
     //Assertions to check UR is never less than LL
-    assert property(@(posedge clk) (box_R10S[1][0]>=box_R10S[0][0])); //UR x >= LL x
-    assert property(@(posedge clk) (box_R10S[1][1]>=box_R10S[0][1])); //UR y >= LL y
+    //assert property(@(posedge clk) (box_R10S[1][0]>=box_R10S[0][0])); //UR x >= LL x
+    //assert property(@(posedge clk) (box_R10S[1][1]>=box_R10S[0][1])); //UR y >= LL y
+    assert property( rb_lt( rst, box_R10S[0][0], box_R10S[1][0], validTri_R10H ));
+    assert property( rb_lt( rst, box_R10S[0][1], box_R10S[1][1], validTri_R10H ));
     // END CODE HERE
 
 

@@ -57,7 +57,6 @@ BoundingBox get_bounding_box(Triangle triangle, Screen screen, Config config)
   bbox.lower_left.y = triangle.v[0].y;
   bbox.upper_right.x = triangle.v[0].x;
   bbox.upper_right.y = triangle.v[0].y;
-
   // iterate over remaining vertices
   for (int i = 1; i < 3; i++)
   {
@@ -65,27 +64,22 @@ BoundingBox get_bounding_box(Triangle triangle, Screen screen, Config config)
     bbox.lower_left.y = min(bbox.lower_left.y, triangle.v[i].y);
     bbox.upper_right.x = max(bbox.upper_right.x, triangle.v[i].x);
     bbox.upper_right.y = max(bbox.upper_right.y, triangle.v[i].y);
-  }
-
+  }	
   // round down to subsample grid
   bbox.upper_right.x = floor_ss(bbox.upper_right.x, config.r_shift, config.ss_w_lg2);
   bbox.upper_right.y = floor_ss(bbox.upper_right.y, config.r_shift, config.ss_w_lg2);
   bbox.lower_left.x = floor_ss(bbox.lower_left.x, config.r_shift, config.ss_w_lg2);
   bbox.lower_left.y = floor_ss(bbox.lower_left.y, config.r_shift, config.ss_w_lg2);
-
   // clip to screen
   bbox.lower_left.x = max(bbox.lower_left.x, 0);
   bbox.lower_left.y = max(bbox.lower_left.y, 0);
   bbox.upper_right.x = min(bbox.upper_right.x, screen.width);
   bbox.upper_right.y = min(bbox.upper_right.y, screen.height);
-  
   // check if bbox is valid
   bbox.valid = (bbox.lower_left.x >= 0);
   bbox.valid = (bbox.lower_left.y >= 0);
   bbox.valid = (bbox.upper_right.x <= screen.width);
   bbox.valid = (bbox.upper_right.y <= screen.height);
-  //bbox.valid = true;
-
   // END CODE HERE
   return bbox;
 }
@@ -99,8 +93,8 @@ BoundingBox get_bounding_box(Triangle triangle, Screen screen, Config config)
 bool sample_test(Triangle triangle, Sample sample)
 {
   bool isHit;
+
   // START CODE HERE
-  //shift to new coordinate system with sample at origin
   int v0_x = triangle.v[0].x - sample.x;
   int v0_y = triangle.v[0].y - sample.y;
   int v1_x = triangle.v[1].x - sample.x;

@@ -373,6 +373,19 @@ if(MOD_FSM == 0) begin // Using baseline FSM
 
     //Your assertions goes here
     // START CODE HERE
+        // 1)
+            assert property( @(posedge clk) ( state_R14H==WAIT_STATE&&validTri_R13H|-> (next_state_R14H==TEST_STATE) ));
+        // 2)
+            assert property( @(posedge clk) ( state_R14H==TEST_STATE&&at_end_box_R14H|-> (next_state_R14H==WAIT_STATE) ));
+        // 3)
+            assert property( @(posedge clk) ( state_R14H==WAIT_STATE&&!validTri_R13H|-> (next_state_R14H==WAIT_STATE) ));
+            assert property( @(posedge clk) ( state_R14H==TEST_STATE&&!at_end_box_R14H|-> (next_state_R14H==TEST_STATE) ));
+            assert property( @(posedge clk) ( state_R14H==WAIT_STATE&&validTri_R13H|-> !next_halt_RnnnnL ));
+            assert property( @(posedge clk) ( state_R14H==WAIT_STATE&&!validTri_R13H|-> next_halt_RnnnnL ));
+            assert property( @(posedge clk) ( state_R14H==TEST_STATE&&at_end_box_R14H|-> next_halt_RnnnnL ));
+            assert property( @(posedge clk) ( state_R14H==TEST_STATE&&!at_end_box_R14H|-> !next_halt_RnnnnL ));
+            assert property( @(posedge clk) ( state_R14H==TEST_STATE&&at_right_edg_R14H|-> (next_sample_R14S == next_up_samp_R14S )));
+            assert property( @(posedge clk) ( state_R14H==TEST_STATE&&!at_right_edg_R14H|-> (next_sample_R14S == next_rt_samp_R14S )));
     // END CODE HERE
     // Assertion ends
 
@@ -391,6 +404,10 @@ if(MOD_FSM == 0) begin // Using baseline FSM
 
     //Check that Proposed Sample is in BBox
     // START CODE HERE
+        assert property(rb_lt( rst, sample_R14S[0] , box_R14S[1][0] , state_R14H==TEST_STATE ));
+        assert property(rb_lt( rst, sample_R14S[1] , box_R14S[1][1] , state_R14H==TEST_STATE ));
+        assert property(rb_lt( rst, box_R14S[0][0] , sample_R14S[0] , state_R14H==TEST_STATE ));
+        assert property(rb_lt( rst, box_R14S[0][1] , sample_R14S[1] , state_R14H==TEST_STATE ));
     // END CODE HERE
     //Check that Proposed Sample is in BBox
 
