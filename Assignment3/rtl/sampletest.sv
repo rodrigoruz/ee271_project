@@ -84,6 +84,7 @@ module sampletest
     localparam EDGES = (VERTS == 3) ? 3 : 5;
     localparam SHORTSF = SIGFIG;
     localparam MROUND = (2 * SHORTSF) - RADIX;
+    localparam SAMEBIT = 12; //small triangle vertices are close so the will have some bit are same
 
     // output for retiming registers
     logic signed [SIGFIG-1:0]       hit_R18S_retime[AXIS-1:0];   // Hit Location
@@ -93,8 +94,9 @@ module sampletest
 
     // Signals in Access Order
     logic signed [SIGFIG-1:0]       tri_shift_R16S[VERTS-1:0][1:0]; // triangle after coordinate shift
-    logic signed [SIGFIG-1:0]       edge_R16S[EDGES-1:0][1:0][1:0]; // Edges
-    logic signed [(2*SHORTSF)-1:0]  dist_lg_R16S[EDGES-1:0]; // Result of x_1 * y_2 - x_2 * y_1
+    logic signed [SIGFIG-1-SAMEBIT:0]       edge_R16S[EDGES-1:0][1:0][1:0]; // Edges
+    //logic signed [(2*SHORTSF)-1:0]  dist_lg_R16S[EDGES-1:0]; // Result of x_1 * y_2 - x_2 * y_1
+    logic signed [(2*(SHORTSF-SAMEBIT))-1:0]  dist_lg_R16S[EDGES-1:0]; // Result of x_1 * y_2 - x_2 * y_1
     logic                           hit_valid_R16H ; // Output (YOUR JOB!)
     logic signed [SIGFIG-1:0]       hit_R16S[AXIS-1:0]; // Sample position
     // Signals in Access Order
@@ -119,20 +121,20 @@ module sampletest
     // (2) Organize edges (form three edges for triangles)
     always_comb begin
         //edge 0-1
-        edge_R16S[0][0][0]=tri_shift_R16S[0][0];
-        edge_R16S[0][0][1]=tri_shift_R16S[0][1];
-        edge_R16S[0][1][0]=tri_shift_R16S[1][0];
-        edge_R16S[0][1][1]=tri_shift_R16S[1][1];
+        edge_R16S[0][0][0]=tri_shift_R16S[0][0][SIGFIG-1-SAMEBIT:0];
+        edge_R16S[0][0][1]=tri_shift_R16S[0][1][SIGFIG-1-SAMEBIT:0];
+        edge_R16S[0][1][0]=tri_shift_R16S[1][0][SIGFIG-1-SAMEBIT:0];
+        edge_R16S[0][1][1]=tri_shift_R16S[1][1][SIGFIG-1-SAMEBIT:0];
         //edge 1-2
-        edge_R16S[1][0][0]=tri_shift_R16S[1][0];
-        edge_R16S[1][0][1]=tri_shift_R16S[1][1];
-        edge_R16S[1][1][0]=tri_shift_R16S[2][0];
-        edge_R16S[1][1][1]=tri_shift_R16S[2][1];
+        edge_R16S[1][0][0]=tri_shift_R16S[1][0][SIGFIG-1-SAMEBIT:0];
+        edge_R16S[1][0][1]=tri_shift_R16S[1][1][SIGFIG-1-SAMEBIT:0];
+        edge_R16S[1][1][0]=tri_shift_R16S[2][0][SIGFIG-1-SAMEBIT:0];
+        edge_R16S[1][1][1]=tri_shift_R16S[2][1][SIGFIG-1-SAMEBIT:0];
         //edge 2-3
-        edge_R16S[2][0][0]=tri_shift_R16S[2][0];
-        edge_R16S[2][0][1]=tri_shift_R16S[2][1];
-        edge_R16S[2][1][0]=tri_shift_R16S[0][0];
-        edge_R16S[2][1][1]=tri_shift_R16S[0][1];
+        edge_R16S[2][0][0]=tri_shift_R16S[2][0][SIGFIG-1-SAMEBIT:0];
+        edge_R16S[2][0][1]=tri_shift_R16S[2][1][SIGFIG-1-SAMEBIT:0];
+        edge_R16S[2][1][0]=tri_shift_R16S[0][0][SIGFIG-1-SAMEBIT:0];
+        edge_R16S[2][1][1]=tri_shift_R16S[0][1][SIGFIG-1-SAMEBIT:0];
     end // always_comb
     // (3) Calculate distance x_1 * y_2 - x_2 * y_1
     always_comb begin
