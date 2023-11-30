@@ -1,3 +1,4 @@
+Warning: Design 'rast' has '4' unresolved references. For more detailed information, use the "link" command. (UID-341)
  
 ****************************************
 Report : timing
@@ -6,17 +7,15 @@ Report : timing
         -max_paths 1
 Design : rast
 Version: U-2022.12-SP1
-Date   : Thu Nov 30 10:53:34 2023
+Date   : Thu Nov 30 11:30:56 2023
 ****************************************
-
- # A fanout number of 1000 was used for high fanout net computations.
 
 Operating Conditions: typical   Library: NangateOpenCellLibrary
 Wire Load Model Mode: top
 
-  Startpoint: clk_r_REG687_S1
+  Startpoint: sampletest/clk_r_REG121_S1
               (rising edge-triggered flip-flop clocked by clk)
-  Endpoint: bbox/DP_OP_98J2_122_646/clk_r_REG558_S2
+  Endpoint: sampletest/d_samp_f3/genblk1.dff_pipe/data_pipe_a_reg[1][0]
             (rising edge-triggered flip-flop clocked by clk)
   Path Group: clk
   Path Type: max
@@ -29,38 +28,48 @@ Wire Load Model Mode: top
   --------------------------------------------------------------------------
   clock clk (rise edge)                                 0.0000     0.0000
   clock network delay (ideal)                           0.0000     0.0000
-  clk_r_REG687_S1/CK (DFFR_X1)                          0.0000 #   0.0000 r
-  clk_r_REG687_S1/Q (DFFR_X1)                           0.1046     0.1046 r
-  U1644/ZN (OR2_X1)                                     0.0376     0.1422 r
-  U1594/ZN (NAND2_X1)                                   0.0333     0.1754 f
-  U1298/ZN (AND2_X1)                                    0.0411     0.2165 f
-  U1471/ZN (OR2_X2)                                     0.0552     0.2717 f
-  U1504/ZN (OAI211_X1)                                  0.0794     0.3511 r
-  U2212/ZN (AOI211_X1)                                  0.0395     0.3906 f
-  U1588/ZN (XNOR2_X1)                                   0.0608     0.4515 f
-  U846/ZN (OR2_X2)                                      0.0600     0.5115 f
-  U3545/CO (FA_X1)                                      0.0994     0.6109 f
-  U3542/S (FA_X1)                                       0.1484     0.7592 r
-  U3755/S (FA_X1)                                       0.1211     0.8803 f
-  U3810/ZN (XNOR2_X1)                                   0.0624     0.9427 f
-  U3811/ZN (XNOR2_X1)                                   0.0573     1.0000 f
-  U3826/S (FA_X1)                                       0.1384     1.1384 r
-  U3824/S (FA_X1)                                       0.1055     1.2439 f
-  U3825/Z (MUX2_X1)                                     0.0659     1.3098 f
-  bbox/DP_OP_98J2_122_646/clk_r_REG558_S2/D (DFFR_X1)   0.0069     1.3167 f
-  data arrival time                                                1.3167
+  sampletest/clk_r_REG121_S1/CK (DFFS_X1)               0.0000     0.0000 r
+  sampletest/clk_r_REG121_S1/Q (DFFS_X1)                0.1007     0.1007 r
+  sampletest/U519/Z (BUF_X2)                            0.0560     0.1568 r
+  sampletest/U3528/Z (MUX2_X1)                          0.0870     0.2438 f
+  sampletest/U3529/ZN (AOI22_X1)                        0.0845     0.3283 r
+  sampletest/U3873/S (FA_X1)                            0.1380     0.4663 f
+  sampletest/U3946/S (FA_X1)                            0.1521     0.6184 r
+  sampletest/U4074/ZN (XNOR2_X1)                        0.0647     0.6832 r
+  sampletest/U4075/ZN (XNOR2_X1)                        0.0648     0.7479 r
+  sampletest/U4083/ZN (NAND2_X1)                        0.0296     0.7776 f
+  sampletest/U4084/ZN (OAI211_X1)                       0.0330     0.8106 r
+  sampletest/U4089/ZN (AND3_X1)                         0.0505     0.8611 r
+  sampletest/U4103/ZN (OAI211_X1)                       0.0343     0.8954 f
+  sampletest/U497/ZN (AND2_X1)                          0.0429     0.9383 f
+  sampletest/U4108/ZN (NAND2_X1)                        0.0259     0.9642 r
+  sampletest/U4114/ZN (NAND3_X1)                        0.0327     0.9969 f
+  sampletest/U4188/ZN (AOI211_X1)                       0.0972     1.0941 r
+  sampletest/U4388/ZN (NAND2_X1)                        0.0319     1.1260 f
+  sampletest/U62/ZN (AND3_X2)                           0.0438     1.1698 f
+  sampletest/U4527/ZN (AND2_X1)                         0.0362     1.2060 f
+  sampletest/U4546/ZN (OAI21_X1)                        0.0397     1.2457 r
+  sampletest/U584/ZN (AND2_X1)                          0.0460     1.2917 r
+  sampletest/U36/ZN (OR2_X1)                            0.0380     1.3297 r
+  sampletest/U661/ZN (AND2_X1)                          0.0410     1.3707 r
+  sampletest/U518/ZN (NAND3_X1)                         0.0278     1.3985 f
+  sampletest/U4650/ZN (NAND2_X1)                        0.0260     1.4245 r
+  sampletest/U4651/ZN (AND4_X1)                         0.0551     1.4796 r
+  sampletest/d_samp_f3/genblk1.dff_pipe/data_pipe_a_reg[1][0]/D (DFFR_X2)
+                                                        0.0072     1.4868 r
+  data arrival time                                                1.4868
 
   clock clk (rise edge)                                 1.2000     1.2000
   clock network delay (ideal)                           0.0000     1.2000
-  bbox/DP_OP_98J2_122_646/clk_r_REG558_S2/CK (DFFR_X1)
+  sampletest/d_samp_f3/genblk1.dff_pipe/data_pipe_a_reg[1][0]/CK (DFFR_X2)
                                                         0.0000     1.2000 r
-  library setup time                                   -0.0411     1.1589
-  data required time                                               1.1589
+  library setup time                                   -0.0330     1.1670
+  data required time                                               1.1670
   --------------------------------------------------------------------------
-  data required time                                               1.1589
-  data arrival time                                               -1.3167
+  data required time                                               1.1670
+  data arrival time                                               -1.4868
   --------------------------------------------------------------------------
-  slack (VIOLATED)                                                -0.1578
+  slack (VIOLATED)                                                -0.3198
 
 
 1

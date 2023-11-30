@@ -1,13 +1,14 @@
 Information: Propagating switching activity (high effort zero delay simulation). (PWR-6)
 Warning: Design has unannotated primary inputs. (PWR-414)
 Warning: Design has unannotated sequential cell outputs. (PWR-415)
+Warning: Design has unannotated black box outputs. (PWR-428)
  
 ****************************************
 Report : power
         -analysis_effort high
 Design : rast
 Version: U-2022.12-SP1
-Date   : Thu Nov 30 10:53:34 2023
+Date   : Thu Nov 30 11:30:56 2023
 ****************************************
 
 
@@ -38,12 +39,12 @@ Attributes
 i - Including register clock pin internal power
 
 
-  Cell Internal Power  =  14.6394 mW   (80%)
-  Net Switching Power  =   3.5478 mW   (20%)
+  Cell Internal Power  =   4.7792 mW   (54%)
+  Net Switching Power  =   3.9960 mW   (46%)
                          ---------
-Total Dynamic Power    =  18.1873 mW  (100%)
+Total Dynamic Power    =   8.7752 mW  (100%)
 
-Cell Leakage Power     = 407.4809 uW
+Cell Leakage Power     = 168.3181 uW
 
 
                  Internal         Switching           Leakage            Total
@@ -52,10 +53,10 @@ Power Group      Power            Power               Power              Power  
 io_pad             0.0000            0.0000            0.0000            0.0000  (   0.00%)
 memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
 black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
-clock_network  1.0318e+04            0.0000            0.0000        1.0318e+04  (  55.49%)  i
-register         956.5137          386.3017        1.6654e+05        1.5094e+03  (   8.12%)
+clock_network  1.0107e+03          487.2126        8.0828e+03        1.5060e+03  (  16.84%)  i
+register         283.2147          282.8945        1.4647e+04          580.7563  (   6.49%)
 sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
-combinational  3.3651e+03        3.1615e+03        2.4094e+05        6.7676e+03  (  36.39%)
+combinational  3.4853e+03        3.2259e+03        1.4559e+05        6.8567e+03  (  76.67%)
 --------------------------------------------------------------------------------------------------
-Total          1.4639e+04 uW     3.5478e+03 uW     4.0748e+05 nW     1.8595e+04 uW
+Total          4.7792e+03 uW     3.9960e+03 uW     1.6832e+05 nW     8.9435e+03 uW
 1

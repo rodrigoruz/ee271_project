@@ -1,11 +1,29 @@
+Information: Building the design 'bbox' instantiated from design 'rast' with
+	the parameters "SIGFIG=24,RADIX=10,VERTS=3,AXIS=3,COLORS=3,PIPE_DEPTH=3". (HDL-193)
+Warning: Cannot find the design 'bbox' in the library 'WORK'. (LBR-1)
+Information: Building the design 'test_iterator' instantiated from design 'rast' with
+	the parameters "SIGFIG=24,RADIX=10,VERTS=3,AXIS=3,COLORS=3,PIPE_DEPTH=1". (HDL-193)
+Warning: Cannot find the design 'test_iterator' in the library 'WORK'. (LBR-1)
+Information: Building the design 'hash_jtree' instantiated from design 'rast' with
+	the parameters "SIGFIG=24,RADIX=10,VERTS=3,AXIS=3,COLORS=3,PIPE_DEPTH=2". (HDL-193)
+Warning: Cannot find the design 'hash_jtree' in the library 'WORK'. (LBR-1)
+Information: Building the design 'dff2' instantiated from design 'sampletest_SIGFIG24_RADIX10_VERTS3_AXIS3_COLORS3_PIPE_DEPTH2' with
+	the parameters "WIDTH=24,ARRAY_SIZE=3,PIPE_DEPTH=1,RETIME_STATUS=1". (HDL-193)
+Warning: Cannot find the design 'dff2' in the library 'WORK'. (LBR-1)
+Information: Building the design 'dff2' instantiated from design 'sampletest_SIGFIG24_RADIX10_VERTS3_AXIS3_COLORS3_PIPE_DEPTH2' with
+	the parameters "WIDTH=24,ARRAY_SIZE=3,PIPE_DEPTH=1,RETIME_STATUS=0". (HDL-193)
+Warning: Cannot find the design 'dff2' in the library 'WORK'. (LBR-1)
+Warning: Unable to resolve reference 'bbox' in 'rast'. (LINK-5)
+Warning: Unable to resolve reference 'test_iterator' in 'rast'. (LINK-5)
+Warning: Unable to resolve reference 'hash_jtree' in 'rast'. (LINK-5)
+Warning: Unable to resolve reference 'dff2' in 'sampletest_SIGFIG24_RADIX10_VERTS3_AXIS3_COLORS3_PIPE_DEPTH2'. (LINK-5)
 Information: Updating design information... (UID-85)
-Warning: Design 'rast' contains 1 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
  
 ****************************************
 Report : design
 Design : rast
 Version: U-2022.12-SP1
-Date   : Thu Nov 30 10:53:31 2023
+Date   : Thu Nov 30 11:30:55 2023
 ****************************************
 
 Design allows ideal nets on clock nets.
@@ -78,9 +96,11 @@ Disabled Timing Arcs:
 
 Required Licenses:
 
-    DesignWare
+    None Required
 
 Design Parameters:
 
     None specified.
+
+Information: This design contains black box (unknown) components. (RPT-8)
 1
