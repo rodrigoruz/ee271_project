@@ -1,0 +1,62 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : rast
+Version: U-2022.12-SP1
+Date   : Thu Nov 16 02:43:14 2023
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: typical   Library: NangateOpenCellLibrary
+Wire Load Model Mode: top
+
+  Startpoint: sampletest/DP_OP_29J1_124_7276/clk_r_REG550_S9
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: sampletest/DP_OP_29J1_124_7276/clk_r_REG16_S10
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  rast               1K_hvratio_1_4        NangateOpenCellLibrary
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                 0.0000     0.0000
+  clock network delay (ideal)                           0.0000     0.0000
+  sampletest/DP_OP_29J1_124_7276/clk_r_REG550_S9/CK (DFFR_X2)
+                                                        0.0000 #   0.0000 r
+  sampletest/DP_OP_29J1_124_7276/clk_r_REG550_S9/Q (DFFR_X2)
+                                                        0.1609     0.1609 r
+  U6132/ZN (XNOR2_X1)                                   0.0894     0.2503 r
+  U6181/ZN (OAI22_X1)                                   0.0454     0.2957 f
+  U6255/CO (FA_X1)                                      0.1028     0.3986 f
+  U6262/CO (FA_X1)                                      0.0992     0.4978 f
+  U6239/CO (FA_X1)                                      0.0876     0.5854 f
+  U6219/CO (FA_X1)                                      0.0905     0.6758 f
+  U6244/CO (FA_X1)                                      0.0992     0.7750 f
+  U6241/S (FA_X1)                                       0.1315     0.9066 r
+  U6242/S (FA_X1)                                       0.1062     1.0128 f
+  sampletest/DP_OP_29J1_124_7276/clk_r_REG16_S10/D (DFFS_X1)
+                                                        0.0071     1.0199 f
+  data arrival time                                                1.0199
+
+  clock clk (rise edge)                                 0.8000     0.8000
+  clock network delay (ideal)                           0.0000     0.8000
+  sampletest/DP_OP_29J1_124_7276/clk_r_REG16_S10/CK (DFFS_X1)
+                                                        0.0000     0.8000 r
+  library setup time                                   -0.0426     0.7574
+  data required time                                               0.7574
+  --------------------------------------------------------------------------
+  data required time                                               0.7574
+  data arrival time                                               -1.0199
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                -0.2624
+
+
+1
