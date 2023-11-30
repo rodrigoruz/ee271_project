@@ -379,45 +379,48 @@ endgenerate
     // outvalid_R10H high if validTri_R10H && BBox is valid
 
     always_comb begin
+        if (halt_RnnnnL) begin
+            //////// ASSIGN "out_box_R10S" and "outvalid_R10H"
+            // START CODE HERE
+            if (rounded_box_R10S[0][0] < 0) begin
+                out_box_R10S[0][0] = 0;
+            end
+            else begin
+                out_box_R10S[0][0] = rounded_box_R10S[0][0];
+            end
+            if (rounded_box_R10S[0][1] < 0) begin
+                out_box_R10S[0][1] = 0;
+            end
+            else begin
+                out_box_R10S[0][1] = rounded_box_R10S[0][1];
+            end
+            if (rounded_box_R10S[1][0] > screen_RnnnnS[0]) begin
+                out_box_R10S[1][0] = screen_RnnnnS[0];
+            end
+            else begin
+                out_box_R10S[1][0] = rounded_box_R10S[1][0];
+            end
+            if (rounded_box_R10S[1][1] > screen_RnnnnS[1]) begin
+                out_box_R10S[1][1] = screen_RnnnnS[1];
+            end
+            else begin
+                out_box_R10S[1][1] = rounded_box_R10S[1][1];
+            end
 
-        //////// ASSIGN "out_box_R10S" and "outvalid_R10H"
-        // START CODE HERE
-        if (rounded_box_R10S[1][0] > screen_RnnnnS[0]) begin
-            out_box_R10S[1][0] = screen_RnnnnS[0];
-        end else begin
-            out_box_R10S[1][0] = rounded_box_R10S[1][0];
-        end//UR x <= screen x
+            // Check if bbox is valid
+            if (out_box_R10S[0][0] >= 0 && out_box_R10S[0][1] >= 0 && out_box_R10S[1][0] <  screen_RnnnnS[0] && out_box_R10S[1][1] <  screen_RnnnnS[1] && is_back_face_R14H) 
+                outvalid_R10H = 1'b1;
+            else 
+                outvalid_R10H = 1'b0;
+            // END CODE HERE
 
-        if (rounded_box_R10S[1][1] > screen_RnnnnS[1]) begin
-            out_box_R10S[1][1] = screen_RnnnnS[1];
-        end else begin
-            out_box_R10S[1][1] = rounded_box_R10S[1][1];
-        end//UR y <= screen y
+    end
 
-        if (rounded_box_R10S[0][0] < 0) begin
-            out_box_R10S[0][0] = 0;
-        end else begin
-            out_box_R10S[0][0] = rounded_box_R10S[0][0];
-        end//LL x >= 0
-
-        if (rounded_box_R10S[0][1] < 0) begin
-            out_box_R10S[0][1] = 0;
-        end else begin
-            out_box_R10S[0][1] = rounded_box_R10S[0][1];
-        end//LL y >= 0
-
-        if (out_box_R10S[1][0] <= screen_RnnnnS[0]
-        && out_box_R10S[1][1] <= screen_RnnnnS[1]
-        && out_box_R10S[0][0] >= 0
-        && out_box_R10S[0][1] >= 0
-        && is_back_face_R14H
-        && validTri_R10H==1'b1) begin
-            outvalid_R10H = 1'b1;
-        end else begin 
-            outvalid_R10H = 1'b0;
-        end
-        // END CODE HERE
-
+    logic gated_clk;
+    logic prev_halt;
+    always_comb begin
+        gated_clk = clk && prev_halt;
+        prev_halt = halt_RnnnnL;
     end
 
     //Assertion for checking if outvalid_R10H has been assigned properly
@@ -435,7 +438,7 @@ endgenerate
     )
     d_bbx_r1
     (
-        .clk    (clk                ),
+        .clk    (gated_clk                ),
         .reset  (rst                ),
         .en     (halt_RnnnnL        ),
         .in     (tri_R10S          ),
@@ -466,7 +469,7 @@ endgenerate
     )
     d_bbx_r3
     (
-        .clk    (clk            ),
+        .clk    (gated_clk            ),
         .reset  (rst            ),
         .en     (halt_RnnnnL    ),
         .in     (out_box_R10S   ),
@@ -498,7 +501,7 @@ endgenerate
     )
     d_bbx_f1
     (
-        .clk    (clk                ),
+        .clk    (gated_clk                ),
         .reset  (rst                ),
         .en     (halt_RnnnnL        ),
         .in     (tri_R13S_retime    ),
@@ -529,7 +532,7 @@ endgenerate
     )
     d_bbx_f3
     (
-        .clk    (clk            ),
+        .clk    (gated_clk            ),
         .reset  (rst            ),
         .en     (halt_RnnnnL    ),
         .in     (box_R13S_retime),
