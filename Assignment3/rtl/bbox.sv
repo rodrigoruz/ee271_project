@@ -143,6 +143,7 @@ module bbox
     //Signals In Clocking Order
 
     //Begin R10 Signals
+    localparam SAMEBIT = 7; //small triangle vertices are close so the will have some bit are same
 
     // Step 1 Result: LL and UR X, Y Fixed Point Values determined by calculating min/max vertices
     // box_R10S[0][0]: LL X
@@ -157,7 +158,11 @@ module bbox
     // Step 3 Result: valid if validTri_R10H && BBox within screen
     logic                           outvalid_R10H;               // output is valid
     logic                       if_backface_R10L;       //triangle is backface
-    logic signed [(2*SIGFIG)-1:0]  backface_R10S;       // cal cross product
+    //logic signed [(2*SIGFIG)-1:0]  backface_R10S;       // cal cross product
+    logic signed [SIGFIG-1:0]       edge_R10S[1:0][1:0]; // Edges for tri10
+    logic signed [SIGFIG-1-SAMEBIT:0]       reduce_edge_R10S[1:0][1:0]; // Edges for tri10 reduce bits
+    logic signed [(2*(SIGFIG-SAMEBIT))-1:0]  backface_R10S;// cal cross product
+    
     
     //End R10 Signals
 
@@ -336,6 +341,7 @@ for(genvar i = 0; i < 2; i = i + 1) begin
 end
 endgenerate
 
+
     //Assertion to help you debug errors in rounding
     assert property( @(posedge clk) (box_R10S[0][0] - rounded_box_R10S[0][0]) <= {subSample_RnnnnU,7'b0});
     assert property( @(posedge clk) (box_R10S[0][1] - rounded_box_R10S[0][1]) <= {subSample_RnnnnU,7'b0});
@@ -380,9 +386,20 @@ endgenerate
         end else begin
             out_box_R10S[0][1] = rounded_box_R10S[0][1];
         end//LL y >= 0
-        
-        backface_R10S=(tri_R10S[1][0]-tri_R10S[0][0])*(tri_R10S[2][1]-tri_R10S[0][1])
-            -(tri_R10S[2][0]-tri_R10S[0][0])*(tri_R10S[1][1]-tri_R10S[0][1]);
+        edge_R10S[0][0]=tri_R10S[1][0]-tri_R10S[0][0];
+        edge_R10S[0][1]=tri_R10S[1][1]-tri_R10S[0][1];
+        edge_R10S[1][0]=tri_R10S[2][0]-tri_R10S[0][0];
+        edge_R10S[1][1]=tri_R10S[2][1]-tri_R10S[0][1];
+
+        reduce_edge_R10S[0][0]=edge_R10S[0][0][SIGFIG-1-SAMEBIT:0];
+        reduce_edge_R10S[0][1]=edge_R10S[0][1][SIGFIG-1-SAMEBIT:0];
+        reduce_edge_R10S[1][0]=edge_R10S[1][0][SIGFIG-1-SAMEBIT:0];
+        reduce_edge_R10S[1][1]=edge_R10S[1][1][SIGFIG-1-SAMEBIT:0];
+
+        //backface_R10S=(tri_R10S[1][0]-tri_R10S[0][0])*(tri_R10S[2][1]-tri_R10S[0][1])
+        //    -(tri_R10S[2][0]-tri_R10S[0][0])*(tri_R10S[1][1]-tri_R10S[0][1]);
+        backface_R10S=reduce_edge_R10S[0][0]*reduce_edge_R10S[1][1]
+            -reduce_edge_R10S[1][0]* reduce_edge_R10S[0][1];
         if (backface_R10S<0)begin
             if_backface_R10L = 1'b1;
         end
